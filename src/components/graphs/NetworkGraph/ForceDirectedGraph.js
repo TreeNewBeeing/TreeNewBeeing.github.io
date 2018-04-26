@@ -411,7 +411,7 @@ class Networkgraph extends Component {
         return (
           <div width='100%' height='800'>
 
-            <svg width='800' height='1000' style={{position:'fixed', right: 0}}
+            <svg width='800' height='1000' style={{position:'fixed', left: '600px'}}
               ref={node => this.svg = d3.select(node)}
             >
               {this.state.loaded ? null :
