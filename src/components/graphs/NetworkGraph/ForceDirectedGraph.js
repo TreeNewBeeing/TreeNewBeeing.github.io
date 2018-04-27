@@ -1,7 +1,9 @@
 import React, { Component } from 'react';
 import * as d3 from 'd3';
-import {parseNetwork} from '../../../lib/Parser'
-import '../../../css/clearfix.css'
+import ControlPanel from './ControlPanel';
+import {parseNetwork} from '../../../lib/Parser';
+import global from '../../../lib/Global';
+
 class Networkgraph extends Component {
     constructor(props){
       super(props);
@@ -15,11 +17,6 @@ class Networkgraph extends Component {
 
     componentWillMount() {
       parseNetwork('AIDS-Netwrok.csv', (data) => {
-        // config Nodes
-        Nodes.colors = ['black', 'blue', 'red', 'green', 'pink'];
-        Nodes.shapes = d3.symbols;
-        Nodes.selectColor = Nodes.colors.length - 1;
-
         // create nodes model
         this.element = {};
         this.element.virtualNodes = new Nodes(data.nodes);
@@ -345,17 +342,17 @@ class Networkgraph extends Component {
       const virtualLinks = element.virtualLinks;
       element.link
         .attr("stroke-width", (d, i) => virtualLinks.nodesList[i].strokeWidth)
-        .attr('stroke', (d, i) => Nodes.colors[virtualLinks.nodesList[i].strokeColor])
+        .attr('stroke', (d, i) => global.networkgraph.colors[virtualLinks.nodesList[i].strokeColor])
         .style('opacity', (d, i) => virtualLinks.nodesList[i].selected? '0.5' : '1');
 
       element.node
         .attr("d", (d, i) =>
-          d3.symbol().type(Nodes.shapes[virtualNodes.nodesList[i].shape]).size(virtualNodes.nodesList[i].size * 1000)()
+          d3.symbol().type(d3.symbols[virtualNodes.nodesList[i].shape]).size(virtualNodes.nodesList[i].size * 1000)()
         )
-        .attr("fill", (d, i) => Nodes.colors[virtualNodes.nodesList[i].color])
+        .attr("fill", (d, i) => global.networkgraph.colors[virtualNodes.nodesList[i].color])
         .style('opacity', (d, i) => virtualNodes.nodesList[i].selected? '0.5' : '1')
         .attr('stroke-width', (d, i) => virtualNodes.nodesList[i].strokeWidth)
-        .attr('stroke', (d, i) => Nodes.colors[virtualNodes.nodesList[i].strokeColor]);
+        .attr('stroke', (d, i) => global.networkgraph.colors[virtualNodes.nodesList[i].strokeColor]);
 
       element.nodeLabel
         .attr('dx', (d, i) => virtualNodes.nodesList[i].dx)
@@ -374,16 +371,13 @@ class Networkgraph extends Component {
       this.setState({...this.state, change: !this.state.change});
     }
 
-    changeStroke(color) {
-      const width = this.stroke.value;
-      console.log(this.stroke.value);
+    changeStroke(color, width) {
       this.element.virtualNodes.changeStroke(color, width);
       this.element.virtualLinks.changeStroke(color, width);
       this.setState({...this.state, change: !this.state.change});
     }
 
-    changeSize() {
-      const size = this.size.value;
+    changeSize(size) {
       this.element.virtualNodes.changeSize(size);
       this.setState({...this.state, change: !this.state.change});
     }
@@ -411,97 +405,30 @@ class Networkgraph extends Component {
         return (
           <div width='100%' height='800'>
 
-            <svg width='800' height='1000' style={{position:'fixed', left: '600px'}}
-              ref={node => this.svg = d3.select(node)}
-            >
               {this.state.loaded ? null :
-                <text x='500' y='400' style={{fontSize: '50px'}}>
+                <text style={{fontSize: '50px', position: 'fixed', left: '50%', top: '50%'}}>
                   loading...
                 </text>
               }
+            <svg width='2000' height='2000' style={{position:'fixed', left: '0', zIndex:'-1'}}
+              ref={node => this.svg = d3.select(node)}
+            >
             </svg>
             {this.state.loaded ?
-              <ul style={{float: 'left', width: '600px', height: '100%',}}>
-                <li style={{height:'300px', overflowY: 'scroll',}}>
-                  <h1> Selected Nodes </h1>
-                  <ul>
-                    {this.element.virtualNodes.nodesList.map((e, i) => {
-                      if (e.selected) {
-                        return <li><br/>{this.state.data.nodes[i].name}</li>;
-                      }
-                    })}
-                  </ul>
-                  <br/>
-                </li>
+              <ControlPanel
+                width = {600}
+                height = {1000}
+                padding = {10}
+                virtualLinks = {this.element.virtualLinks}
+                virtualNodes = {this.element.virtualNodes}
+                data = {this.state.data}
 
-                <li style={{height:'300px', overflowY: 'scroll',}}>
-                  <h1> Selected Links </h1>
-                  <ul>
-                    {this.element.virtualLinks.nodesList.map((e, i) => {
-                      if (e.selected) {
-                        return <li><br/>{`${this.state.data.links[i].source.name} -> ${this.state.data.links[i].target.name}`}</li>;
-                      }
-                    })}
-                  </ul>
-                  <br/>
-                </li>
-
-                <li className='clearfix'>
-                  <h1> Color </h1>
-                  <ul>
-                    {Nodes.colors.map((e, i) =>
-                      <li onClick={this.changeColor.bind(this, i)} style={{margin: '40px', width:'20px', height: '20px', backgroundColor: `${e}`, float:'left', cursor:'pointer'}}>
-
-                      </li>
-                    )}
-                  </ul>
-
-                </li>
-                <li className='clearfix'>
-                  <h1> Size </h1>
-                  <input ref={node => this.size = node}id="number" type="number" onChange={this.changeSize.bind(this)}></input>
-                  <br/><br/>
-                </li>
-
-                <li className='clearfix'>
-                  <h1> Shape </h1>
-                  <ul>
-                    <svg width='600px'>
-                    {Nodes.shapes.map((e, i) =>
-                      // <li onClick={this.changeShape} style={{margin: '40px', width:'20px', height: '20px', float:'left', cursor:'pointer'}}>
-                        <path
-                          transform = { `translate(${(2 * i - 1) * 50} ,60)`}
-                          d={
-                            d3.symbol().type(Nodes.shapes[i]).size(900)()
-                          }
-                          style = {{cursor: 'pointer'}}
-                          onClick = {this.changeShape.bind(this, i)}
-                        />
-                      // </li>
-                    )}
-                    </svg>
-                  </ul>
-                </li>
-                <li className='clearfix'>
-                  <h1> Stroke </h1>
-                  <br/>
-                  Stroke Width:
-                  <input ref={node => this.stroke = node}id="number" type="number" onChange={this.changeStroke.bind(this, null)}></input>
-                  <br/><br/>
-                  Stroke Color:
-                  <ul>
-                    {Nodes.colors.map((e, i) =>
-                      <li onClick={this.changeStroke.bind(this, i)} style={{margin: '40px', width:'20px', height: '20px', backgroundColor: `${e}`, float:'left', cursor:'pointer'}}>
-
-                      </li>
-                    )}
-                  </ul>
-                </li>
-                <li>
-                  <button onClick={this.changeMode.bind(this)}>change Mode</button>
-                </li>
-
-              </ul>
+                changeColor = {this.changeColor.bind(this)}
+                changeSize = {this.changeSize.bind(this)}
+                changeShape = {this.changeShape.bind(this)}
+                changeStroke = {this.changeStroke.bind(this)}
+                changeMode = {this.changeMode.bind(this)}
+              />
             : null}
           </div>
         );
