@@ -169,7 +169,8 @@ class Networkgraph extends Component {
           return arcTranslation(d);
         })
         .attr("d", function(d, i){
-          d.thickness = 1 + d['Connection Weight'];
+          d.thickness = 0;
+          // d.thickness = 1 + d['Connection Weight'];
           arcBuilder.setRadii(d);
           return arcBuilder();
         });
@@ -202,6 +203,23 @@ class Networkgraph extends Component {
         return i * spacing + margin;
       }
     }
+
+    // prepareHireachay() {
+    //   const r1 = h / 2,
+    //       r0 = r1 - 110;
+
+    //   const chord = d3.chord()
+    //       .padAngle(0.05)
+    //       .sortSubgroups(d3.descending)
+    //       .sortChords(d3.descending);
+
+    //   const arc = d3.arc()
+    //       .innerRadius(r0)
+    //       .outerRadius(r0 + 20);
+
+    //   const ribbon = d3.ribbon()
+    //       .radius(r0);
+    // }
 
     connect(element) {
       const simulation = element.simulation;
@@ -341,6 +359,7 @@ class Networkgraph extends Component {
       const virtualNodes = element.virtualNodes;
       const virtualLinks = element.virtualLinks;
       element.link
+        .style('fill', (d, i) => global.networkgraph.colors[virtualLinks.nodesList[i].strokeColor])
         .attr("stroke-width", (d, i) => virtualLinks.nodesList[i].strokeWidth)
         .attr('stroke', (d, i) => global.networkgraph.colors[virtualLinks.nodesList[i].strokeColor])
         .style('opacity', (d, i) => virtualLinks.nodesList[i].selected? '0.5' : '1');
