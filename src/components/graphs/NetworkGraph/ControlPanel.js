@@ -106,10 +106,14 @@ class ControlPanel extends Component{
                   </ul>
                 </li>
                 <li>
-                  <button onClick={() => {this.props.changeMode()}}>change Mode</button>
+                    <ul>
+                        <li><button onClick={() => {this.props.changeMode(1)}}>Force Directed Graph</button></li>
+                        <li><button onClick={() => {this.props.changeMode(2)}}>Arc Deoagram</button></li>
+                    </ul>
                 </li>
 
             </ul>
+            <br/>
             </div>
         )
     }

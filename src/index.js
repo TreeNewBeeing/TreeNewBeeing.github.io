@@ -6,6 +6,6 @@ import './css/index.css';
 
 import App from './components/App';
 
-ReactDOM.render(<App />, document.getElementsByTagName('body')[0]);
+ReactDOM.render(<App />, document.getElementById('app'));
 
 registerServiceWorker();

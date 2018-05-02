@@ -7,7 +7,7 @@ import {
 import logo from '../logo.svg';
 import '../css/App.css';
 
-import ForceDirectedGraph from './graphs/NetworkGraph/ForceDirectedGraph';
+import NetworkGraph from './graphs/NetworkGraph/NetworkGraph.js';
 import Navbar from './Navbar';
 import Profile from './Profile';
 import School from './School';
@@ -26,7 +26,7 @@ class App extends Component {
           </Route>
           <Route path="/network-graph">
               <div>
-                <Route path="/network-graph/force-directed" component={ForceDirectedGraph}/>
+                <Route path="/network-graph" component={NetworkGraph}/>
               </div>
           </Route>
         </div>
