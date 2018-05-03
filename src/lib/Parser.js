@@ -23,21 +23,29 @@ export function parseNetwork(filename, main) {
             // nodes_data
             data.forEach((e) => {
               if (node[e.source] === undefined) {
-                node[e.source] = true;
+                node[e.source] = {};
+                node[e.source].links = [];
               }
               if (node[e.target] === undefined) {
-                node[e.target] = true;
+                node[e.target] = {};
+                node[e.target].links = [];
               }
+
+              node[e.source].links.push(e.target);
+              node[e.target].links.push(e.source);
             })
-            const nodes_data = Object.keys(node).map((e) => {
+
+            console.log(node);
+            const nodes_data = Object.keys(node).map((e, i) => {
+              node[e].i = i;
               return {'name': e};
             });
 
             // nodes dict data
-            const nodes_dict_data = {};
-            nodes_data.forEach((e, i) => {
-                nodes_dict_data[e.name] = i;
-            })
+            // const nodes_dict_data = {};
+            // nodes_data.forEach((e, i) => {
+            //     nodes_dict_data[e.name] = i;
+            // })
 
             // nodes tree data
             // const nodes_tree_data = d3.stratify()
@@ -48,7 +56,7 @@ export function parseNetwork(filename, main) {
             data = {
               links: links_data,
               nodes: nodes_data,
-              nodes_dict: nodes_dict_data,
+              nodes_dict: node,
             };
             main(data);
         }

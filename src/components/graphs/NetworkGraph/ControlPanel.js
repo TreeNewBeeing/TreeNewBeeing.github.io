@@ -4,6 +4,7 @@ import React, { Component } from 'react';
 import * as d3 from 'd3';
 import global from '../../../lib/Global';
 import Hamburger from '../../menu/Hamburger';
+import { transition } from 'd3';
 
 // props:
 
@@ -20,19 +21,32 @@ import Hamburger from '../../menu/Hamburger';
 // changeShape(shape),
 // changeStroke(color, width),
 // changeMode(),
+
+const HAMBURGER_MENU_SIZE = 30;
+
 class ControlPanel extends Component{
 
     constructor(props){
         super(props);
+        this.state = {
+            expand: false,
+        }
     }
 
-    extend
+    clickHamburger() {
+        console.log('a');
+        this.setState({...this.state, expand: !this.state.expand});
+    }
     render() {
 
         return (
             <div>
-            {/* <Hamburger size={40}/> */}
-            <ul style={{float: 'left', width: `${this.props.width}px`, height: `100%`,padding: `${this.props.padding}px`, backgroundColor:'white', position:'fixed', overflowY:'scroll', opacity:'0.985', border: '1px #f4f4f4 solid', boxShadow: '0px 0px 25px grey'}}>
+            <Hamburger size={HAMBURGER_MENU_SIZE} expand={this.state.expand} click={this.clickHamburger.bind(this)}/>
+
+            <ul style={{float: 'left', width: `${this.props.width}px`, height: `100%`,padding: `${this.props.padding}px`, backgroundColor:'white', position:'fixed', overflowY:'scroll', opacity:'0.985', border: '1px #f4f4f4 solid', boxShadow: '0px 0px 25px grey', paddingTop: HAMBURGER_MENU_SIZE * 2,
+                left: this.state.expand? 0 : -(2 * this.props.padding + this.props.width + 4),
+                transition: 'left 0.2s ease-out',
+                }}>
                 <li style={{height:'300px',}}>
                   <h1> Selected Nodes </h1>
                   <ul style={{height: '239px', width:`${0.9 * this.props.width}px`, border:'1px solid', overflowY: 'scroll', padding:'10px',margin:'5px 0'}}>
@@ -113,7 +127,6 @@ class ControlPanel extends Component{
                 </li>
 
             </ul>
-            <br/>
             </div>
         )
     }

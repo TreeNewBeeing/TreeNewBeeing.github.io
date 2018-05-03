@@ -42,8 +42,8 @@ export default class ForceDirectedGraph extends Component{
         for(let i=0; i<links.length; i++){
             const link = links[i];
             const value = link['Connection Weight'];
-            nodes[nodes_dict[link.source.name]].value += link['Connection Weight'];
-            nodes[nodes_dict[link.target.name]].value += link['Connection Weight'];
+            nodes[nodes_dict[link.source.name].i].value += link['Connection Weight'];
+            nodes[nodes_dict[link.target.name].i].value += link['Connection Weight'];
         }
         for(let i=0; i<nodes.length; i++){
             nodeValMin = Math.min(nodeValMin, nodes[i].value);
@@ -88,8 +88,8 @@ export default class ForceDirectedGraph extends Component{
         .enter().append("path")
         .style('cursor', 'pointer')
         .attr("transform", function(d,i){
-            d.x1 = nodeDisplayX(nodes_dict[d.target.name]);
-            d.x2 = nodeDisplayX(nodes_dict[d.source.name]);
+            d.x1 = nodeDisplayX(nodes_dict[d.target.name].i);
+            d.x2 = nodeDisplayX(nodes_dict[d.source.name].i);
             return arcTranslation(d);
         })
         .attr("d", function(d, i){

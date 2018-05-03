@@ -230,6 +230,20 @@ class Nodes {
       this.nodesList[x].selected = !this.nodesList[x].selected;
     }
 
+    selectAdjacent(x, element) {
+      const {nodes, nodes_dict} = element;
+      nodes_dict[nodes[x].name].links.forEach(e => {
+        this.nodesList[nodes_dict[e].i].selected = true;
+      })
+    }
+
+    unselectAdjacent(x, element) {
+      const {nodes, nodes_dict} = element;
+      nodes_dict[nodes[x].name].links.forEach(e => {
+        this.nodesList[nodes_dict[e].i].selected = false;
+      })
+    }
+
     changeColor(num) {
       this.nodesList.forEach((e) => {
         if (e.selected) {
