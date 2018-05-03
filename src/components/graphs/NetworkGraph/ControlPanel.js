@@ -9,18 +9,22 @@ import { transition } from 'd3';
 // props:
 
 
-// width,
-// height,
-// padding,
-// data,
-// virtualLinks,
-// virtualNodes,
+// width
+// height
+// padding
+// data
+// virtualLinks
+// virtualNodes
 
-// changeColor(color),
-// changeSize(size),
-// changeShape(shape),
-// changeStroke(color, width),
-// changeMode(),
+// changeColor(color)
+// changeSize(size)
+// changeShape(shape)
+// changeStroke(color, width)
+// changeMode()
+// selectByAdjacent()
+// selectByDegree()
+// selectByAccessible()
+// unselect()
 
 const HAMBURGER_MENU_SIZE = 30;
 
@@ -47,6 +51,14 @@ class ControlPanel extends Component{
                 left: this.state.expand? 0 : -(2 * this.props.padding + this.props.width + 4),
                 transition: 'left 0.2s ease-out',
                 }}>
+                <li>
+                    <ul>
+                        <li><button onClick={this.props.unselect}> unselect all </button></li>
+                        <li><button onClick={this.props.selectByAdjacent}> select adjacent nodes </button></li>
+                        <li><button onClick={this.props.selectByDegree}> select nodes with same degree</button></li>
+                        <li><button onClick={this.props.selectByAccessible}> select accesible nodes</button></li>
+                    </ul>
+                </li>
                 <li style={{height:'300px',}}>
                   <h1> Selected Nodes </h1>
                   <ul style={{height: '239px', width:`${0.9 * this.props.width}px`, border:'1px solid', overflowY: 'scroll', padding:'10px',margin:'5px 0'}}>

@@ -5,6 +5,7 @@ import {parseNetwork} from '../../../lib/Parser';
 import global from '../../../lib/Global';
 import ForceDirectedGraph from './graphs/ForceDirectedGraph';
 import ArcDiagram from './graphs/ArcDiagram';
+import {BFS} from '../../../lib/Graph'
 class Networkgraph extends Component {
     constructor(props){
       super(props);
@@ -139,6 +140,55 @@ class Networkgraph extends Component {
       this.setState({...this.state, mode: num});
     }
 
+    selectByAdjacent() {
+      console.log(this.element.virtualNodes);
+      const list = []
+      this.element.virtualNodes.nodesList.forEach((e, i) => {
+        if(e.selected){
+          list.push(i);
+        }
+      })
+
+      list.forEach((e) => {
+        this.element.virtualNodes.selectByAdjacent(e, this.element);
+      })
+      this.setState({...this.state, change: !this.state.change});
+    }
+
+    unselect() {
+      this.element.virtualNodes.unselect();
+      this.setState({...this.state, change: !this.state.change});
+    }
+    selectByDegree() {
+      console.log(this.element.virtualNodes);
+      const list = []
+      this.element.virtualNodes.nodesList.forEach((e, i) => {
+        if(e.selected){
+          list.push(i);
+        }
+      })
+
+      list.forEach((e) => {
+        this.element.virtualNodes.selectByDegree(e, this.element);
+      })
+      this.setState({...this.state, change: !this.state.change});
+    }
+
+    selectByAccessible() {
+      console.log(this.element.virtualNodes);
+      const list = []
+      this.element.virtualNodes.nodesList.forEach((e, i) => {
+        if(e.selected){
+          list.push(i);
+        }
+      })
+
+      list.forEach(e => {
+        this.element.virtualNodes.selectByAccessible(e, this.element);
+      })
+      this.setState({...this.state, change: !this.state.change});
+    }
+
     renderGraph() {
 
       // no display until data loaded
@@ -190,6 +240,11 @@ class Networkgraph extends Component {
                 changeShape = {this.changeShape.bind(this)}
                 changeStroke = {this.changeStroke.bind(this)}
                 changeMode = {this.changeMode.bind(this)}
+
+                selectByAdjacent = {this.selectByAdjacent.bind(this)}
+                unselect = {this.unselect.bind(this)}
+                selectByDegree = {this.selectByDegree.bind(this)}
+                selectByAccessible = {this.selectByAccessible.bind(this)}
               />
             : null}
           </div>
@@ -230,17 +285,44 @@ class Nodes {
       this.nodesList[x].selected = !this.nodesList[x].selected;
     }
 
-    selectAdjacent(x, element) {
-      const {nodes, nodes_dict} = element;
+    selectByAdjacent(x, element) {
+      console.log('select adjacent')
+      const {nodes, nodes_dict} = element.data;
+      console.log(nodes_dict[nodes[x].name])
       nodes_dict[nodes[x].name].links.forEach(e => {
+        console.log(nodes_dict[e].i)
         this.nodesList[nodes_dict[e].i].selected = true;
       })
     }
 
-    unselectAdjacent(x, element) {
-      const {nodes, nodes_dict} = element;
-      nodes_dict[nodes[x].name].links.forEach(e => {
-        this.nodesList[nodes_dict[e].i].selected = false;
+    selectByDegree(x, element) {
+      console.log('select degree')
+      const {nodes, nodes_dict} = element.data;
+      console.log(nodes_dict[nodes[x].name])
+      const degree = nodes_dict[nodes[x].name].links.length;
+      nodes.forEach((e, i) => {
+        if(nodes_dict[e.name].links.length == degree) {
+          this.nodesList[i].selected = true;
+        }
+      })
+
+    }
+
+    selectByAccessible(x, element) {
+      console.log('select accessible')
+      const {nodes, nodes_dict} = element.data;
+      console.log(nodes_dict[nodes[x].name])
+      const accessibleNodes = BFS(nodes_dict[nodes[x].name], nodes_dict);
+      console.log(accessibleNodes);
+      accessibleNodes.forEach(e => {
+        this.nodesList[e.i].selected = true;
+      })
+
+    }
+
+    unselect() {
+      this.nodesList.forEach(e => {
+        e.selected = false;
       })
     }
 
