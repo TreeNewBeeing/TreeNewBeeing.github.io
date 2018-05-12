@@ -5,7 +5,8 @@ import {parseNetwork} from '../../../lib/Parser';
 import global from '../../../lib/Global';
 import ForceDirectedGraph from './graphs/ForceDirectedGraph';
 import ArcDiagram from './graphs/ArcDiagram';
-import {BFS} from '../../../lib/Graph'
+import '../../../css/Network.css';
+import {BFS, classify, Centrality} from '../../../lib/Graph';
 class Networkgraph extends Component {
     constructor(props){
       super(props);
@@ -13,7 +14,10 @@ class Networkgraph extends Component {
       this.state = {
         loaded: false,
         change: false,
+        centrality: 0,
         mode: 1,
+        expand: false,
+        groupBased: false,
       }
     }
 
@@ -25,7 +29,14 @@ class Networkgraph extends Component {
         this.element.virtualLinks = new Links(data.links);
         this.element.data = data;
 
+        // config centrality
+        Centrality(data.nodes, data.nodes_dict, true, true);
+
+        // config types
+        this.element.data.groups = classify(data.nodes, data.nodes_dict);
+
         // set state
+        console.log('start building graph', this.element);
         this.setState({...this.state, loaded:true, data:data});
       });
     }
@@ -92,23 +103,30 @@ class Networkgraph extends Component {
       }
 
       function bindClick (element) {
-        const node = element.node;
-        const link = element.link;
+        const { node, link, svg } = element;
         const virtualLinks = data.virtualLinks;
         const virtualNodes = data.virtualNodes;
         node.on('click', clickNode.bind(this));
         link.on('click', clickLink.bind(this));
+        svg.on('click', clickSvg.bind(this))
 
+        function clickSvg() {
+          console.log('a');
+          this.setState({...this.state, expand: false});
+        }
         function clickNode (d, i) {
           virtualNodes.select(i);
+          console.log(d3.event);
           // console.log(element.virtualNodes.nodesList.filter((e) => e.selected));
           this.setState({...this.state, change: !this.state.change});
+          d3.event.stopPropagation()
         }
 
         function clickLink (d, i) {
           virtualLinks.select(i);
           // console.log(virtualLinks.nodesList.filter((e) => e.selected));
           this.setState({...this.state, change: !this.state.change});
+          d3.event.stopPropagation()
         }
       }
 
@@ -175,18 +193,132 @@ class Networkgraph extends Component {
     }
 
     selectByAccessible() {
-      console.log(this.element.virtualNodes);
-      const list = []
+      // console.log(this.element.virtualNodes);
+      const { nodes, nodes_dict } = this.element.data;
+      let list = [];
+      const completedGroups = [];
+
+      // get full group list
       this.element.virtualNodes.nodesList.forEach((e, i) => {
         if(e.selected){
-          list.push(i);
-        }
-      })
+          // check whether this group has been found
+          const has = completedGroups.find(e => {
+            return e === nodes[i].group;
+          });
 
-      list.forEach(e => {
-        this.element.virtualNodes.selectByAccessible(e, this.element);
-      })
+          // console.log('not found this type before', has);
+          // find all
+          if(has === undefined) {
+            console.log('select group', nodes[i].group);
+            completedGroups.push(nodes[i].group);
+            const addList = BFS(nodes_dict[nodes[i].name], nodes_dict);
+            list = list.concat(addList);
+          }
+        }
+      });
+
+      // console.log(list);
+
+      list = list.map(e => e.i);
+      // console.log(list);
+      this.element.virtualNodes.selectAll(list);
       this.setState({...this.state, change: !this.state.change});
+    }
+
+    changeCentrality(type) {
+      switch(type) {
+        case 0 :
+          for(let i = 0; i < this.element.data.nodes.length; i += 1) {
+            this.element.virtualNodes.nodesList[i].color = this.element.virtualNodes.color;
+          }
+          break;
+        case 1 :
+          if(this.state.groupBased) {
+            // assign color based on its betweenness level on its own group
+            this.changeColorOnGroupCentrality('betweenness');
+          } else {
+            // assign color based on its betweenness level on whole graph
+            this.changeColorOnWholeCentrality('betweenness');
+          }
+          break;
+        case 2:
+          if(this.state.groupBased) {
+            // assign color based on its closeness level on its own group
+            this.changeColorOnGroupCentrality('closeness');
+          } else {
+            // assign color based on its closeness level on whole graph
+            this.changeColorOnWholeCentrality('closeness');
+          }
+          break;
+
+        default:
+      }
+      this.setState({...this.state, centrality: type});
+    }
+
+    changeColorOnWholeCentrality(type) {
+      let max = Number.MIN_SAFE_INTEGER;
+      let min = Number.MAX_SAFE_INTEGER;
+      for(let i = 0; i < this.element.data.nodes.length; i += 1) {
+        max = this.element.data.nodes[i][type] > max ? this.element.data.nodes[i][type] : max;
+        min = this.element.data.nodes[i][type] < min ? this.element.data.nodes[i][type] : min;
+      }
+      const unit = global.networkgraph.colors.length / (max - min + 1);
+      for(let i = 0; i < this.element.data.nodes.length; i += 1) {
+        this.element.virtualNodes.nodesList[i].color = parseInt((this.element.data.nodes[i][type] - min) * unit, 10);
+      }
+    }
+
+    changeColorOnGroupCentrality(type) {
+      const groups = Object.keys(this.element.data.groups);
+      for(let i = 0; i < groups.length; i += 1) {
+        let max = Number.MIN_SAFE_INTEGER;
+        let min = Number.MAX_SAFE_INTEGER;
+        const group = this.element.data.groups[groups[i]];
+        // console.log(group, max, unitBetweenness);
+        for(let j = 0; j < group.length; j += 1) {
+          max = this.element.data.nodes[group[j]][type] > max ? this.element.data.nodes[group[j]][type] : max;
+          min = this.element.data.nodes[group[j]][type] < min ? this.element.data.nodes[group[j]][type] : min;
+        }
+        const unit = global.networkgraph.colors.length / (max - min + 1);
+        for(let j = 0; j < group.length; j += 1) {
+          const cur = group[j];
+          this.element.virtualNodes.nodesList[cur].color = parseInt((this.element.data.nodes[cur][type] - min) * unit, 10);
+        }
+      }
+    }
+
+
+    /** for pass down */
+    changeExpand() {
+      console.log('a');
+      this.setState({...this.state, expand: !this.state.expand});
+    }
+
+    changeBasedType(value) {
+      console.log('change to', value);
+      switch(this.state.centrality){
+        case 1 :
+          if(value) {
+            // assign color based on its betweenness level on its own group
+            this.changeColorOnGroupCentrality('betweenness');
+          } else {
+            // assign color based on its betweenness level on whole graph
+            this.changeColorOnWholeCentrality('betweenness');
+          }
+          break;
+        case 2:
+          if(value) {
+            // assign color based on its closeness level on its own group
+            this.changeColorOnGroupCentrality('closeness');
+          } else {
+            // assign color based on its closeness level on whole graph
+            this.changeColorOnWholeCentrality('closeness');
+          }
+          break;
+        default:
+      }
+      this.setState({...this.state, groupBased: value});
     }
 
     renderGraph() {
@@ -234,7 +366,10 @@ class Networkgraph extends Component {
                 virtualLinks = {this.element.virtualLinks}
                 virtualNodes = {this.element.virtualNodes}
                 data = {this.state.data}
+                expand = {this.state.expand}
+                groupBased = {this.state.groupBased}
 
+                changeCentrality = {this.changeCentrality.bind(this)}
                 changeColor = {this.changeColor.bind(this)}
                 changeSize = {this.changeSize.bind(this)}
                 changeShape = {this.changeShape.bind(this)}
@@ -245,6 +380,9 @@ class Networkgraph extends Component {
                 unselect = {this.unselect.bind(this)}
                 selectByDegree = {this.selectByDegree.bind(this)}
                 selectByAccessible = {this.selectByAccessible.bind(this)}
+
+                changeExpand = {this.changeExpand.bind(this)}
+                changeBasedType = {this.changeBasedType.bind(this)}
               />
             : null}
           </div>
@@ -259,7 +397,7 @@ class Nodes {
 
       this.size = 1;
       this.shape = 0;
-      this.color = 0;
+      this.color = 6;
       this.dx = 18;
       this.strokeColor = 0;
       this.strokeWidth = 1;
@@ -306,6 +444,12 @@ class Nodes {
         }
       })
 
+    }
+
+    selectAll(elements) {
+      for(let i = 0; i < elements.length; i += 1) {
+        this.nodesList[elements[i]].selected = true;
+      }
     }
 
     selectByAccessible(x, element) {

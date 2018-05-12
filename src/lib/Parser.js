@@ -25,14 +25,18 @@ export function parseNetwork(filename, main) {
               if (node[e.source] === undefined) {
                 node[e.source] = {};
                 node[e.source].links = [];
+                node[e.source].weights = [];
               }
               if (node[e.target] === undefined) {
                 node[e.target] = {};
                 node[e.target].links = [];
+                node[e.target].weights = [];
               }
 
               node[e.source].links.push(e.target);
+              node[e.source].weights.push(parseFloat(e['Connection Weight']));
               node[e.target].links.push(e.source);
+              node[e.target].weights.push(parseFloat(e['Connection Weight']));
             })
 
             console.log(node);

@@ -78,6 +78,7 @@ export default class ForceDirectedGraph extends Component{
         ;
         element.node = nodeContainer
                 .append("path")
+                .attr('class', 'node')
                 .style('cursor', 'pointer')
         ;
 
@@ -107,7 +108,7 @@ export default class ForceDirectedGraph extends Component{
     }
 
     update(element) {
-        console.log(element.link);
+        console.log('update graph');
         const virtualNodes = this.props.element.virtualNodes;
         const virtualLinks = this.props.element.virtualLinks;
         element.link
@@ -115,6 +116,7 @@ export default class ForceDirectedGraph extends Component{
           .attr("stroke-width", (d, i) => virtualLinks.nodesList[i].strokeWidth)
           .attr('stroke', (d, i) => global.networkgraph.colors[virtualLinks.nodesList[i].strokeColor])
           .style('opacity', (d, i) => virtualLinks.nodesList[i].selected? '0.5' : '1');
+
 
         element.node
           .attr("d", (d, i) =>
@@ -128,7 +130,10 @@ export default class ForceDirectedGraph extends Component{
         element.nodeLabel
           .attr('dx', (d, i) => virtualNodes.nodesList[i].dx)
           .attr("dy", ".35em")
-          .text(function(d) { return d.name.split('|')[7] });
+          .text(function(d, i) {
+            return i;
+            //   return d.name.split('|')[7]
+          });
     }
 
     clear() {
