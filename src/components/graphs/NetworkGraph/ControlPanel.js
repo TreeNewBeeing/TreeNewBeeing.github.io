@@ -50,8 +50,11 @@ class ControlPanel extends Component{
             <Hamburger size={HAMBURGER_MENU_SIZE} expand={this.props.expand} click={this.props.changeExpand}/>
 
             <ul style={{float: 'left', width: `${this.props.width}px`, height: `100%`,padding: `${this.props.padding}px`, backgroundColor:'white', position:'fixed', overflowY:'scroll', opacity:'0.985', border: '1px #f4f4f4 solid', boxShadow: '0px 0px 25px grey', paddingTop: HAMBURGER_MENU_SIZE * 2,
-                left: this.props.expand? 0 : -(2 * this.props.padding + this.props.width + 4),
-                transition: 'left 0.2s ease-out',
+                // left: this.props.expand? 0 : -(2 * this.props.padding + this.props.width + 4),
+                transform: `translate(${this.props.expand? 0 : -(2 * this.props.padding + this.props.width + 4)}px,0px)`,
+                WebkitTransform: `translate(${this.props.expand? 0 : -(2 * this.props.padding + this.props.width + 4)}px,0px)`,
+                transition: 'transform 0.2s ease-out',
+                WebkitTransition: 'transform 0.2s ease-out',
                 }}>
 
                 {/* centrality */}
@@ -67,17 +70,18 @@ class ControlPanel extends Component{
                       </div>
                   </div>
                   <div className="inner-container" id='toggle-container' style={{
-                    clipPath: this.props.groupBased ? 'inset(0 0 0 50%)' : 'inset(0 50% 0 0)',}}>
-                      <div className="toggle">
+                    clipPath: this.props.groupBased ? 'inset(0 0 0 50%)' : 'inset(0 50% 0 0)',
+                    WebkitClipPath: this.props.groupBased ? 'inset(0 0 0 50%)' : 'inset(0 50% 0 0)',}}>
+                      <div className="toggle" onClick={() => {this.props.changeBasedType(true)}}>
                           <p>Group Centrality</p>
                       </div>
-                      <div className="toggle">
+                      <div className="toggle" onClick={() => {this.props.changeBasedType(false)}}>
                           <p>Graph Centrality</p>
                       </div>
                   </div>
                 </div>
                 <br/>
-                  <label className="container">Off
+                  <label className="container">Clear
                     <input type="radio" onChange={() => {this.props.changeCentrality(0);}} defaultChecked='true' name="radio"/>
                     <span className="checkmark"></span>
                   </label>

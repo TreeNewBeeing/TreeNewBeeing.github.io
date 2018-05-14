@@ -92,6 +92,7 @@
     background: dodgerblue;
     color: white;
     transition: .3s cubic-bezier(0,0,0,1);
+    -webkit-transition: .3s cubic-bezier(0,0,0,1);
 }
 
 .toggle {

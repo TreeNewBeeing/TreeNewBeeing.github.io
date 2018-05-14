@@ -6,7 +6,7 @@ import global from '../../../lib/Global';
 import ForceDirectedGraph from './graphs/ForceDirectedGraph';
 import ArcDiagram from './graphs/ArcDiagram';
 import '../../../css/Network.css';
-import {BFS, classify, Centrality} from '../../../lib/Graph';
+import {BFS, classify, Centrality, Dijkstra} from '../../../lib/Graph';
 class Networkgraph extends Component {
     constructor(props){
       super(props);
@@ -26,17 +26,18 @@ class Networkgraph extends Component {
         // create nodes model
         this.element = {};
         this.element.virtualNodes = new Nodes(data.nodes);
+        this.element.virtualNodes.select(337);
         this.element.virtualLinks = new Links(data.links);
         this.element.data = data;
 
-        // config centrality
-        Centrality(data.nodes, data.nodes_dict, true, true);
-
         // config types
-        this.element.data.groups = classify(data.nodes, data.nodes_dict);
+        data.groups = classify(data.nodes, data.nodes_dict);
+        console.log('start building graph', this.element);
+        // config centrality
+        Centrality(data.groups, data.nodes, data.nodes_dict, true, true);
 
         // set state
-        console.log('start building graph', this.element);
+        console.log('start building graph');
         this.setState({...this.state, loaded:true, data:data});
       });
     }
@@ -270,11 +271,11 @@ class Networkgraph extends Component {
     }
 
     changeColorOnGroupCentrality(type) {
-      const groups = Object.keys(this.element.data.groups);
+      const groups = this.element.data.groups;
       for(let i = 0; i < groups.length; i += 1) {
         let max = Number.MIN_SAFE_INTEGER;
         let min = Number.MAX_SAFE_INTEGER;
-        const group = this.element.data.groups[groups[i]];
+        const group = this.element.data.groups[i];
         // console.log(group, max, unitBetweenness);
         for(let j = 0; j < group.length; j += 1) {
           max = this.element.data.nodes[group[j]][type] > max ? this.element.data.nodes[group[j]][type] : max;
