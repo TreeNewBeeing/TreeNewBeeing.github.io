@@ -26,13 +26,12 @@ class Networkgraph extends Component {
         // create nodes model
         this.element = {};
         this.element.virtualNodes = new Nodes(data.nodes);
-        this.element.virtualNodes.select(337);
         this.element.virtualLinks = new Links(data.links);
         this.element.data = data;
 
         // config types
         data.groups = classify(data.nodes, data.nodes_dict);
-        console.log('start building graph', this.element);
+        // console.log('start building graph', this.element);
         // config centrality
         Centrality(data.groups, data.nodes, data.nodes_dict, true, true);
 
