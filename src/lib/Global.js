@@ -1,8 +1,30 @@
-import * as d3 from 'd3';
-
 export default global = {
-    networkgraph: {
-        colors: ['black', 'blue', 'red', 'green', 'pink'],
-        shapes: d3.symbols,
+    height: {
+        navbar: 50,
+        main: 450,
+        school: 650,
+        icon: 270,
+        iconImage: 120,
+        contact: 30,
+
+    },
+    width: {
+        sidePanel: 300,
+        hamburger: 30,
+    },
+    font: {
+        big: 20,
+        mid: 15,
+        sm: 12,
+    },
+    default: {
+        left: {
+            position: 'relative',
+            float:'left',
+        },
+        right: {
+            position: 'relative',
+            float:'right',
+        },
     }
 }

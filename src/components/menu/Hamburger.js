@@ -1,61 +1,97 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 
 // width,
 // height,
-export default class Hamburger extends Component{
+const styles = {
+    outer: {
+        position: 'absolute',
+        zIndex: 200,
+        left: '50%',
+        top: '50%',
+        transition: 'background-color 0.2s ease-out',
+        cursor: 'pointer'
+    },
+    embed: {
+        width: '100%',
+        height: 'auto',
+        transition: 'opacity 0.3s, transform 0.2s',
+    },
+    line: {
+        width:'auto',
+        border: 'none',
+    }
+}
+export default class Hamburger extends PureComponent{
     constructor(props) {
         super(props);
+
+        // bind
+        this.focus = this.focus.bind(this);
+        this.unfocus = this.unfocus.bind(this);
+        // state
         this.state = {
             focus: false,
         }
     }
 
+    componentWillUpdate() {
+        console.log(performance.now());
+      }
+      componentDidUpdate() {
+        console.log(performance.now());
+      }
+    focus() {
+        this.setState({...this.state, focus: true});
+    }
+
+    unfocus() {
+        this.setState({...this.state, focus: false});
+    }
+
     render() {
+        const heightRatio = 8 / 27;
+        let height = parseInt(this.props.size * heightRatio / 3);
+        let margin = parseInt(this.props.size * (1 - heightRatio) / 4);
+        margin += (this.props.size - (3 * height) - (4 * margin)) / 4;
+        height = `${height}px`;
+        margin = `${margin}px`;
+
         return (
-            <ul style={{width: `${this.props.size}px`, height: `${this.props.size}px`,
-                left: this.props.size / 3,
-                top: this.props.size / 3,
-                boxShadow: `0px 0px ${this.props.size/3}px grey`,
-                padding: `${this.props.size / 6}px`,
-                position: 'fixed',
-                zIndex: 200,
-                transition: 'background-color 0.2s ease-out',
-                backgroundColor: this.state.focus? '#777777' : 'white',
-                cursor: 'pointer'}}
+            <ul style={{...styles.outer,
+                    width: this.props.size, height: this.props.size,
+                    boxShadow: `0px 0px ${this.props.size/3}px grey`,
+                    margin: `${-this.props.size / 2}px`,
+                    backgroundColor: this.state.focus? '#777777' : 'white',
+                }}
                 id='hamburger-menu'
 
                 onClick={this.props.click}
-                onMouseEnter={()=>{
-                    this.setState({...this.state, focus: true});
-                }}
-                onMouseLeave={()=>{
-                    this.setState({...this.state, focus: false});
-                }}
 
-                // onMouseLeave={(e)=>{
-                //     if(!this.state.menu){
-                //         this.setState(Object.assign(this.state,{focus: false}));
-                //     }
-                // }}
+                onMouseEnter={this.focus}
+                onMouseLeave={this.unfocus}
+
                 >
                 <div style={{
-                    transform: this.props.expand?'rotate(90deg)':'rotate(0deg)',
-                    transition: 'opacity 0.3s, transform 0.2s',}}>
-                <li style={{height: `${this.props.size / 6}px`,borderRadius: `${this.props.size / 6}px`,
+                        ...styles.embed,
+                        transform: this.props.expand?'rotate(90deg)':'rotate(0deg)',
+                    }}>
+                <li style={{
+                    ...styles.line,
+                    height,borderRadius: height,
+                    margin: `${margin}`,
                     backgroundColor: this.state.focus? 'white' : 'black',
-                    marginTop:`${this.props.size / 12}px`,
-                    marginBottom:`${this.props.size / 6}px`,
-                    // transform:'rotate(90deg)',
                     }}/>
-                <li style={{height: `${this.props.size / 6}px`,borderRadius: `${this.props.size / 6}px`,
+                <li style={{
+                    ...styles.line,
+                    height,borderRadius: height,
                     backgroundColor: this.state.focus? 'white' : 'black',
-                    marginBottom:`${this.props.size / 6}px`,
-                    // transform:'rotate(90deg)',
+                    margin: `${margin}`,
                 }}/>
-                <li style={{height: `${this.props.size / 6}px`,borderRadius: `${this.props.size / 6}px`,
+                <li style={{
+                    ...styles.line,
+                    height,borderRadius: height,
                     backgroundColor: this.state.focus? 'white' : 'black',
-                    // marginBottom:`${this.props.size / 6}px`,
-                    // transform:'rotate(90deg)',
+                    margin: `${margin}`,
                 }}/>
                 </div>
             </ul>

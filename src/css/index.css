@@ -1,3 +1,18 @@
+li {
+  list-style: none;
+  display: block; }
+
+.clearfix:after {
+  content: '';
+  display: block;
+  clear: both; }
+
+.glass::before {
+  filter: blur(20px); }
+
+.scroll {
+  -webkit-overflow-scrolling: touch; }
+
 html, body, div, span, object, iframe,
 h1, h2, h3, h4, h5, h6, p, blockquote, pre,
 abbr, address, cite, code,
@@ -16,7 +31,8 @@ time, mark, audio, video {
   outline: 0;
   font-size: 100%;
   vertical-align: baseline;
-  background: transparent; }
+  background: transparent;
+  user-select: none; }
 
 body {
   line-height: 1; }
@@ -41,7 +57,8 @@ a {
   padding: 0;
   font-size: 100%;
   vertical-align: baseline;
-  background: transparent; }
+  background: transparent;
+  text-decoration: none; }
 
 /* change colours to suit your needs */
 ins {
@@ -78,8 +95,5 @@ hr {
 
 input, select {
   vertical-align: middle; }
-
-body {
-  background-color: white; }
 
 /*# sourceMappingURL=index.css.map */

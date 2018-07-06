@@ -1,91 +1,20 @@
-@import '_global';
+.fa-wechat:hover {
+    background-color : #7bb32e;
+}
 
-$contact_padding : 10px;
+.fa-facebook:hover {
+    background: #3B5998;
+}
 
-.profile{
-    height: $profile_height;
-    width: 100%;
-    padding-top: $navbar_height;
-    border:1px solid;
-    background-color:rgba($color: #000000, $alpha: 0.9);
+.fa-envelope:hover{
+    background: white;
+    color: #dd4b39 !important;
+}
 
-    .icon{
-        width: 100%;
-        height: $profile_icon_height;
-        border-radius: 10px ;
-        // border:1px solid;
+.fa-linkedin:hover{
+    background: #007bb5;
+}
 
-
-        img{
-            margin: auto;
-            position: relative;
-            top: $profile_icon_img_height - 15;
-            border-radius: $profile_icon_img_height;
-            width: $profile_icon_img_height;
-            height: $profile_icon_img_height;
-            display: block;
-        }
-
-    }
-
-    span{
-
-        h1{
-            font-size: $font_big;
-            font-family: San -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif
-        }
-        width: 100%;
-        display: block;
-        font-size: $font_sm;
-        color: aliceblue;
-        margin: 0 auto;
-        text-align: center;
-        font-family: $font_family;
-    }
-
-    ul{
-        width: 5*($profile_contact_img_height+($contact_padding*2));
-        height: $profile_contact_img_height;
-        // padding: 30px;
-        margin: 30px auto;
-        li{
-            padding: $contact_padding;
-            float: left;
-
-
-            .fa {
-                width: $profile_contact_img_height;
-                height: $profile_contact_img_height;
-                font-size: $font_big;
-                text-align: center;
-                line-height: $profile_contact_img_height;
-                color: white;
-                text-decoration: none;
-                transition: 0.2s;
-                border-radius: 5px;
-            }
-
-            .fa-wechat:hover {
-                background-color : #7bb32e;
-            }
-
-            .fa-facebook:hover {
-                background: #3B5998;
-            }
-
-            .fa-envelope:hover{
-                background: white;
-                color: #dd4b39;
-            }
-
-            .fa-linkedin:hover{
-                background: #007bb5;
-            }
-
-            .fa-github:hover{
-                background: #6e5494;
-            }
-
-        }
-    }
+.fa-github:hover{
+    background: #6e5494;
 }
