@@ -11,7 +11,7 @@
   },
   "scripts": {
     "prep": "sudo gem install sass",
-    "start": "react-scripts start",
+    "start": "PORT=3002 react-scripts start",
     "watch": "sass --watch src/scss/:src/css/",
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
