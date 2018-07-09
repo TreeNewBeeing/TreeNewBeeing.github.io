@@ -6,11 +6,13 @@ export default global = {
         icon: 270,
         iconImage: 120,
         contact: 30,
+        picture: 200,
 
     },
     width: {
         sidePanel: 300,
         hamburger: 30,
+        picture: 300,
     },
     font: {
         big: 20,

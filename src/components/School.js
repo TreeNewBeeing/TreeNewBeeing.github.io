@@ -19,55 +19,35 @@ for(let i = 0; i < 30; i += 1) {
 
 generateImages(images);
 
+// ${(Math.random() * 2 - 1) * 60 }% +
 function generateImages(images) {
     const num = parseInt(Math.sqrt(images.length));
     for(let i = 0; i < images.length; i += 1) {
         // make it looks random
         images[i].transform =
             `translate(
-                calc(
-                    -50% +
-                    ${(Math.random() * 2 - 1) * 60 }% +
-                    ${0 + (i % num * 100 / (num - 1))}vw
-                ),
-                calc(
-                    -50% +
-                    ${(Math.random() * 2 - 1) * 40}% +
-                    ${0 + (i / num * global.height.school / (num - 1)) }px
-                )
+                ${0 + (i % num * 100 / (num - 1))}vw,
+                ${(Math.random() * 2 - 1) * 0.4 * global.height.picture + (i / num * global.height.school / (num - 1)) }px
             )
             rotate(${(Math.random() * 2 - 1) * 45}deg`;
     }
 }
 
+// ${(Math.random() * 2 - 1) * 15 + (i > num ? 20 : -20)}% +
 function focusImage(images, n) {
     const num = Math.ceil(images.length / 2);
     for(let i = 0; i < images.length; i += 1) {
         images[i].transform =
             `translate(
-                calc(
-                    -50% +
-                    ${(Math.random() * 2 - 1) * 15 + (i > num ? 20 : -20)}% +
-                    ${i > num ? '100' : '0'}vw
-                ),
-                calc(
-                    -50% +
-                    ${(Math.random() * 2 - 1) * 10}% +
-                    ${i % num * global.height.school / (num - 1) }px
-                )
+                ${(i > num ? 100 : 0) + (Math.random() * 10 - 5)}vw,
+                ${(Math.random() * 2 - 1) * 0.1 * global.height.picture + i % num * global.height.school / (num - 1) }px
             )
             rotate(${(Math.random() * 2 - 1) * 45}deg)`;
     }
     images[n].transform =
         `translate(
-            calc(
-                -50% +
-                50vw
-            ),
-            calc(
-                -50% +
-                ${global.height.school / 2}px
-            )
+            50vw,
+            ${global.height.school / 2}px
         )
         rotate(0deg)`
     ;
@@ -80,14 +60,18 @@ const styles = {
         height: '100%'
     },
     picture: {
-        width: '300px',
-        height: '200px',
+        width: `${global.width.picture}px`,
+        height: `${global.height.picture}px`,
         position: 'absolute',
         boxShadow: '0 0 10px',
         padding: '5px',
         backgroundColor: 'white',
         cursor: 'pointer',
         transition: 'transform 0.2s ease-out',
+        backfaceVisibility: 'hidden',
+        webkitBackfaceVisibility: 'hidden',
+        left: `${-0.5 * global.width.picture}px`,
+        top: `${-0.5 * global.height.picture}px`,
     },
     superLayer: {
         width: '100%',

@@ -57,6 +57,12 @@ class App extends Component {
     this.setState({...this.state, height: document.documentElement.clientHeight});
   }
   clickHamburger() {
+    if(this.state.expand) {
+      document.body.style.overflow = 'auto';
+    } else {
+      console.log('hidden');
+      document.body.style.overflow = 'hidden';
+    }
     this.setState({...this.state, expand: !this.state.expand});
   }
 
