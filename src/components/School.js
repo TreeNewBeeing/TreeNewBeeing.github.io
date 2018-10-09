@@ -104,7 +104,7 @@ const styles = {
         backgroundColor: 'rgba(150,150,150,0.3)',
         borderRadius: '30px',
         padding: '20px',
-        height: '300px',
+        height: '400px',
         transition: 'height 0.3s ease-in-out',
     },
     course: {

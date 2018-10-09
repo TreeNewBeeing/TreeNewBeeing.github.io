@@ -1,7 +1,7 @@
 import React, { PureComponent } from 'react';
 import '../css/Profile.css';
 import global from '../lib/Global';
-import icon from '../img/icon3.jpg'
+import icon from '../img/icon3.png'
 import School from './School';
 import Experience from './Experience';
 import Projects from './Projects'
@@ -89,7 +89,7 @@ const styles = {
 const icons = [
     ['https://www.facebook.com/people/Zifeng-Xie/100006370320902','fa-facebook'],
     ['','fa-wechat'],
-    ['mailto:zephre0101@gmail.com','fa-envelope'],
+    ['mailto:christo1tse@gmail.com','fa-envelope'],
     ['https://www.linkedin.com/in/zifeng-xie/','fa-linkedin'],
     ['https://github.com/TreeNewBeeing/', 'fa-github'],
 ];
