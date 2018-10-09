@@ -7,12 +7,14 @@ export default global = {
         iconImage: 120,
         contact: 30,
         picture: 200,
+        stick: 80,
 
     },
     width: {
         sidePanel: 300,
         hamburger: 30,
         picture: 300,
+        stick: 10,
     },
     font: {
         big: 20,

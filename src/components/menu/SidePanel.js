@@ -65,7 +65,7 @@ const styles = {
     },
 }
 
-const bars = ['Home', 'Education', 'Experience', 'Projects', 'Publication'];
+const bars = ['Home', 'Education', 'Projects'];
 
 const defaultProps = {
     expand: false,

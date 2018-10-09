@@ -1,0 +1,11 @@
+.feedList {
+    column-count: 3;
+    min-width: 1400px;
+}
+
+@media only screen and (max-width: 600px) {
+    .feedList {
+        column-count: 1;
+        min-width: 200px;
+    }
+}

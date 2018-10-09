@@ -4,6 +4,7 @@ import global from '../lib/Global';
 import icon from '../img/icon3.jpg'
 import School from './School';
 import Experience from './Experience';
+import Projects from './Projects'
 
 const styles = {
     profile: {
@@ -78,6 +79,11 @@ const styles = {
         overflowY: 'scroll',
         backgroundColor: 'white',
     },
+    projects: {
+        width: '100%',
+        height: 'auto',
+        overflowX: 'scroll'
+    }
 }
 
 const icons = [
@@ -121,15 +127,15 @@ class Profile extends PureComponent {
                 <div id='Education' style={styles.school}>
                     <School/>
                 </div>
-                <div id="Experience" style={styles.experience}>
+                {/* <div id="Experience" style={styles.experience}>
                     <Experience/>
+                </div> */}
+                <div id="Projects" style={styles.projects}>
+                    <Projects/>
                 </div>
-                <div id="Projects" style={styles.experience}>
+                {/* <div id="Publication" style={styles.experience}>
                     kla;dsf
-                </div>
-                <div id="Publication" style={styles.experience}>
-                    kla;dsf
-                </div>
+                </div> */}
             </div>
         );
     }
