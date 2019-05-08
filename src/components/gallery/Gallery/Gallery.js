@@ -65,8 +65,6 @@ class Images {
                 delete images.data[i][j];
             }
         }
-        this.width = images.width;
-        this.height = images.height;
     }
 
     toArray() {
@@ -76,6 +74,7 @@ class Images {
     }
 }
 
+const whitespace = 1.2;
 export default class Gallery extends React.Component {
     constructor(props) {
         super(props);
@@ -102,7 +101,6 @@ export default class Gallery extends React.Component {
         imageHeight,
         prevImages
     ) => {
-        const whitespace = 1.2;
         const width = canvasWidth ? canvasWidth : window.innerWidth;
         const height = canvasHeight ? canvasHeight : window.innerHeight;
         const col = Math.ceil(height / imageHeight);
@@ -111,25 +109,8 @@ export default class Gallery extends React.Component {
         const unitWidth = parseInt(width / row);
         const unitHeight = parseInt(height / col);
         let num = 0;
-        console.log(images.data);
         images.fill(prevImages);
 
-        // if shrink
-        // if (prevImages.find(images.width + 1, images.height + 1)) {
-        //     console.log("a");
-        //     prevImages.cpoyTo(images);
-        //     for (let i = 0; i <= row; i++) {
-        //         for (let j = 0; j <= col; j++) {
-        //             const prevImage = images.find(i, j);
-        //             prevImage.posX = i * unitWidth - 0.5 * imageWidth;
-        //             prevImage.posY = j * unitHeight - 0.5 * imageHeight;
-        //         }
-        //     }
-
-        //     return images;
-        // }
-
-        // if expand
         for (let i = 0; i <= row; i++) {
             for (let j = 0; j <= col; j++) {
                 const prevImage = images.find(i, j);
@@ -137,12 +118,12 @@ export default class Gallery extends React.Component {
                 const posY = j * unitHeight - 0.5 * imageHeight;
 
                 if (prevImage) {
-                    // already rendered
+                    // if already rendered only change position
                     prevImage.posX = posX;
                     prevImage.posY = posY;
-                    images.data.push(prevImage);
+                    images.data[i][j] = prevImage;
                 } else {
-                    // not rendered
+                    // if not rendered set new object
                     images.data[i][j] = {
                         src: imageSources[num],
                         randomTranslateX:
@@ -159,45 +140,80 @@ export default class Gallery extends React.Component {
                         posY
                     };
                 }
+
+                // if imageSource is not enough start new iteration
                 num = (num + 1) % imageSources.length;
             }
         }
 
+        console.log(images.width, images.height);
+
         return images;
     };
 
-    static focusImage = (props, gallery, pos) => {
-        const images = gallery.map((e, i) => {
-            if (i == pos) {
-            } else {
-                const randomRotate = (Math.random() * 2 - 1) * 45;
-                const randomTranslateX =
-                    (Math.random() * 2 - 1) * 0.15 * props.imageWidth;
-                const randomTranslateY =
-                    (Math.random() * 2 - 1) * 0.15 * props.imageHeight;
-                return {
-                    src: e.src,
-                    transform: `
-                    translate(${0 + randomTranslateX}px, ${0 +
-                        randomTranslateY}px)
-                    rotate(${randomRotate}deg
-                `,
-                    zIndex: parseInt(Math.random() * 20)
-                };
-            }
-        });
+    static focusImage = (
+        images,
+        pos,
+        canvasWidth,
+        canvasHeight,
+        imageWidth,
+        imageHeight
+    ) => {
+        const y = pos % images.height;
+        const x = parseInt(pos / images.height);
+        const width = canvasWidth ? canvasWidth : window.innerWidth;
+        const height = canvasHeight ? canvasHeight : window.innerHeight;
+        const size = Math.ceil(images.width + images.height / 2);
+        const unitHeight = height / (size + 1);
+
+        images.data.forEach((row, j) =>
+            row.map((e, i) => {
+                if (j == x && i == y) {
+                    e.randomRotate = 0;
+                    e.randomTranslateX = 0;
+                    e.randomTranslateY = 0;
+                    e.posX = -0.5 * imageWidth + 0.5 * width;
+                    e.posY = -0.5 * imageHeight + 0.5 * height;
+                } else {
+                    i = j * images.width + i;
+                    e.randomRotate = (Math.random() * 2 - 1) * 45;
+                    e.randomTranslateX =
+                        (Math.random() * 2 - 1) * (1 - whitespace) * imageWidth;
+                    e.randomTranslateY =
+                        (Math.random() * 2 - 1) *
+                        (1 - whitespace) *
+                        imageHeight;
+                    e.posX = -0.5 * imageWidth;
+                    e.posY = -0.5 * imageHeight + parseInt(i / 2) * unitHeight;
+                    e.posX += i % 2 == 0 ? 0 : width;
+                    // e.posY += i % 2 == 0 ? 0 : height;
+                }
+            })
+        );
         return images;
     };
 
     static getDerivedStateFromProps(props, state) {
-        state.images = Gallery.assignImages(
-            props.images,
-            props.width,
-            props.height,
-            props.imageWidth,
-            props.imageHeight,
-            state.images
-        );
+        if (state.focus !== null) {
+            state.images = Gallery.focusImage(
+                state.images,
+                state.focus,
+                props.width,
+                props.height,
+                props.imageWidth,
+                props.imageHeight,
+                state.images
+            );
+        } else {
+            state.images = Gallery.assignImages(
+                props.images,
+                props.width,
+                props.height,
+                props.imageWidth,
+                props.imageHeight,
+                state.images
+            );
+        }
 
         state.fromMySelf = false;
         state.recalculate = false;
@@ -205,7 +221,8 @@ export default class Gallery extends React.Component {
     }
 
     focusPicture = i => {
-        return () => {
+        return e => {
+            e.stopPropagation();
             this.setState({ ...this.state, focus: i });
         };
     };
@@ -223,7 +240,7 @@ export default class Gallery extends React.Component {
                     transition: "filter 0.3s ease-in-out",
                     filter: `blur(${this.props.blur}px)`
                 }}
-                onClick={this.random}
+                onClick={this.unfocusPicture}
             >
                 {this.state.images.toArray().map((e, i) => (
                     <img
