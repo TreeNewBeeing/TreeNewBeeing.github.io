@@ -1,0 +1,37 @@
+.drop-panel {
+    width: 100%;
+    height: 100%;
+    background-color: black;
+}
+
+.drop-panel-leaver {
+    height: 5px;
+    width: 100%;
+    border-radius: 5px;
+    margin: 5px 0;
+    transition: background-color 0.3s ease-in-out;
+    background-color: white;
+}
+
+.drop-panel-leavers {
+    width: 110px;
+    height: 30px;
+    margin: auto;
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    bottom: 0px;
+    cursor: pointer;
+    /* background-color: rgb(200, 200, 200); */
+
+    position: absolute;
+    bottom: 0;
+}
+
+.drop-panel-content {
+    width: 100%;
+    position: absolute;
+    left: 0;
+    top: 0;
+    opacity: 1;
+}

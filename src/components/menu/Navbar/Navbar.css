@@ -1,0 +1,38 @@
+.navbar {
+    height: 50px;
+    transition: transform 0.3s ease-in-out;
+    position: fixed;
+    top: 0;
+    width: 100%;
+    background-color: rgba(0, 0, 0, 0.8);
+    font-family: Arial, Helvetica, sans-serif;
+    opacity: 0.8;
+
+}
+
+.navbar-content {
+    height: 100%;
+    float: left;
+    display: block;
+}
+
+
+
+
+
+
+/************** For this page **************/
+.navbar-home {
+    height: 100%;
+    width: 100px;
+    color: white;
+    line-height: 50px;
+    display: inline-block;
+}
+
+.navbar-home-link {
+    width: 100%;
+    display: block;
+    text-align: center;
+    cursor: pointer;
+}

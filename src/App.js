@@ -1,14 +1,57 @@
-import React, { Component } from 'react';
-import logo from '../logo.svg';
-import '../css/App.css';
+import React, { Component } from "react";
+import { BrowserRouter as Router, Route, Link } from "react-router-dom";
+import "./App.css";
+// import SidePanel from "./components/menu/SidePanel/SidePanel";
 
+import global from "./Global";
+import SideNavigation from "./components/menu/SideNavigation/SideNavigation";
+import NavbarImp from "./components/implementation/NavbarImp/NavbarImp";
+import SidePanelImp from "./components/implementation/SidePanelImp/SidePanelImp";
+
+import Profile from "./components/Profile";
 class App extends Component {
-  render() {
-    return (
-        <div classname=""> helloworld </div>
-    )
-  }
-  
+    constructor(props) {
+        super(props);
+
+        // state
+        this.state = {
+            expand: false
+            // height: document.documentElement.clientHeight,
+        };
+        // window.onresize = this.sizeChange.bind(this);
+    }
+
+    sizeChange = () => {
+        console.log("a");
+        this.setState({
+            ...this.state,
+            height: document.documentElement.clientHeight
+        });
+    };
+
+    hideSidePanel = () => {
+        console.log("a");
+        this.setState({ ...this.state, expand: false });
+    };
+
+    render() {
+        return (
+            <Router>
+                <Route path="/">
+                    <SideNavigation
+                        pageMove={true}
+                        mask={true}
+                        expand={this.state.expand}
+                        navbar={<NavbarImp />}
+                        sidePanel={<SidePanelImp close={this.hideSidePanel} />}
+                    >
+                        <Profile />
+                        {/* <Route path="/" component={Profile} /> */}
+                    </SideNavigation>
+                </Route>
+            </Router>
+        );
+    }
 }
 
 export default App;
