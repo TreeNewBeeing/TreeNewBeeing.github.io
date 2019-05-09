@@ -114,8 +114,8 @@ export default class Gallery extends React.Component {
         for (let i = 0; i <= row; i++) {
             for (let j = 0; j <= col; j++) {
                 const prevImage = images.find(i, j);
-                const posX = i * unitWidth - 0.5 * imageWidth;
-                const posY = j * unitHeight - 0.5 * imageHeight;
+                const posX = i * unitWidth;
+                const posY = j * unitHeight;
 
                 if (prevImage) {
                     // if already rendered only change position
@@ -146,8 +146,6 @@ export default class Gallery extends React.Component {
             }
         }
 
-        console.log(images.width, images.height);
-
         return images;
     };
 
@@ -172,10 +170,14 @@ export default class Gallery extends React.Component {
                     e.randomRotate = 0;
                     e.randomTranslateX = 0;
                     e.randomTranslateY = 0;
-                    e.posX = -0.5 * imageWidth + 0.5 * width;
-                    e.posY = -0.5 * imageHeight + 0.5 * height;
+                    e.posX = 0.5 * width;
+                    e.posY = 0.5 * height;
+                    e.prevZIndex = e.randomZIndex;
+                    e.randomZIndex = 30;
                 } else {
                     i = j * images.width + i;
+                    e.randomZIndex =
+                        e.randomZIndex > 20 ? e.prevZIndex : e.randomZIndex;
                     e.randomRotate = (Math.random() * 2 - 1) * 45;
                     e.randomTranslateX =
                         (Math.random() * 2 - 1) * (1 - whitespace) * imageWidth;
@@ -183,10 +185,8 @@ export default class Gallery extends React.Component {
                         (Math.random() * 2 - 1) *
                         (1 - whitespace) *
                         imageHeight;
-                    e.posX = -0.5 * imageWidth;
-                    e.posY = -0.5 * imageHeight + parseInt(i / 2) * unitHeight;
-                    e.posX += i % 2 == 0 ? 0 : width;
-                    // e.posY += i % 2 == 0 ? 0 : height;
+                    e.posX = i % 2 == 0 ? 0 : width;
+                    e.posY = parseInt(i / 2) * unitHeight;
                 }
             })
         );
@@ -222,18 +222,21 @@ export default class Gallery extends React.Component {
 
     focusPicture = i => {
         return e => {
+            if (this.props.blur !== 0) return;
             e.stopPropagation();
             this.setState({ ...this.state, focus: i });
         };
     };
 
     unfocusPicture = () => {
+        if (this.props.blur !== 0) return;
         this.setState({ ...this.state, focus: null });
     };
 
     render() {
         return (
             <div
+                className="gallery"
                 style={{
                     width: "100%",
                     height: "100%",
@@ -244,17 +247,18 @@ export default class Gallery extends React.Component {
             >
                 {this.state.images.toArray().map((e, i) => (
                     <img
-                        className="gallery-image"
-                        key={`ucsd${i}`}
+                        className={`gallery-image ${
+                            this.props.blur === 0 ? "galler-image-pointer" : ""
+                        }`}
+                        key={`image${i}`}
                         src={e.src}
                         style={{
                             height: this.props.imageHeight,
                             transform: `
-                            translate(${e.posX +
-                                e.randomTranslateX}px, ${e.posY +
-                                e.randomTranslateY}px)
-                            rotate(${e.randomRotate}deg
-                        `,
+                            translate(-50%, -50%)
+                            translateX(${e.posX + e.randomTranslateX}px)
+                            translateY(${e.posY + e.randomTranslateY}px)
+                            rotate(${e.randomRotate}deg`,
                             zIndex: e.randomZIndex
                         }}
                         onClick={this.focusPicture(i)}

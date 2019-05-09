@@ -16,21 +16,10 @@ class App extends Component {
         // state
         this.state = {
             expand: false
-            // height: document.documentElement.clientHeight,
         };
-        // window.onresize = this.sizeChange.bind(this);
     }
 
-    sizeChange = () => {
-        console.log("a");
-        this.setState({
-            ...this.state,
-            height: document.documentElement.clientHeight
-        });
-    };
-
     hideSidePanel = () => {
-        console.log("a");
         this.setState({ ...this.state, expand: false });
     };
 

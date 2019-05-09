@@ -20,6 +20,7 @@ export default class Education extends React.Component {
     }
 
     expandPanel = () => {
+        console.log("a");
         if (!this.state.expand) this.setState({ ...this.state, expand: true });
     };
 
@@ -33,7 +34,11 @@ export default class Education extends React.Component {
 
     render() {
         return (
-            <div className="education" onMouseEnter={this.expandPanel}>
+            <div
+                className="education"
+                onMouseEnter={this.expandPanel}
+                onTouchStart={this.expandPanel}
+            >
                 <DropPanel
                     className="education-info-layer"
                     expand={this.state.expand}
@@ -44,36 +49,43 @@ export default class Education extends React.Component {
                     height={500}
                     width={"90%"}
                 >
-                    <h1 className="education-h1"> UC SAN DIEGO</h1>
-                    <h3 className="education-h3">
-                        Bachelor of Math-Computer Science
-                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                        2015 - 2019
-                    </h3>
-                    <div className="education-p">
-                        <h2 className="education-course">Courses Acquired</h2>
-                        <hr className="education-line" />
-                        <ul className="education-courses">
-                            {courses.map(e => (
-                                <li className="clearfix education-course">
-                                    {e.name}
-                                    <div className="education-resource">
-                                        <a
-                                            href={e.demo}
-                                            className="education-link"
-                                        >
-                                            notes
-                                        </a>
-                                        <a
-                                            href={e.note}
-                                            className="education-link"
-                                        >
-                                            demo
-                                        </a>
-                                    </div>
-                                </li>
-                            ))}
-                        </ul>
+                    <div className="education-half-info">
+                        <h1 className="education-h1"> UC SAN DIEGO</h1>
+                        <h3 className="education-h3">
+                            Bachelor of Math-Computer Science
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                            2015 - 2019
+                        </h3>
+                        <div className="education-p">
+                            <h2 className="education-course">
+                                Courses Acquired
+                            </h2>
+                            <hr className="education-line" />
+                            <ul className="education-courses">
+                                {courses.map((e, i) => (
+                                    <li
+                                        key={i}
+                                        className="clearfix education-course"
+                                    >
+                                        {e.name}
+                                        <div className="education-resource">
+                                            <a
+                                                href={e.demo}
+                                                className="education-link"
+                                            >
+                                                notes
+                                            </a>
+                                            <a
+                                                href={e.note}
+                                                className="education-link"
+                                            >
+                                                demo
+                                            </a>
+                                        </div>
+                                    </li>
+                                ))}
+                            </ul>
+                        </div>
                     </div>
                 </DropPanel>
 
@@ -84,6 +96,7 @@ export default class Education extends React.Component {
                     height={650}
                     imageWidth={320}
                     imageHeight={180}
+                    change={false}
                 />
             </div>
         );

@@ -8,6 +8,7 @@ import emsImage from "../img/EMS.png";
 import sciqImage from "../img/SciQ.png";
 import uberImage from "../img/UberBill.png";
 import easyEvent from "../img/EasyEvent.png";
+import hisGeoMap from "../img/hisgeomap.png";
 
 const styles = {
     root: {
@@ -63,12 +64,21 @@ export default class Projects extends PureComponent {
                     "This project aims to facilitate HIV intervention through identification and visualization of risk-prone behaviors, events, and locations. We are using machine learning techniques to identify/classify risk signals in social media data. The visualization component of this project will enable healthcare providers to explore risk data from multiple perspectives and understand the intricate interplay of various social, demographic and geographic factors. This knowledge will, in turn, inform prevention and facilitate targeted intervention for HIV.",
                     hivGraphImage
                 ),
-                new Feed("Ufit", "", ufitImage),
+
+                new Feed(
+                    "HisGeoMap",
+                    "HisGeoMap is an online location search and visualization tool designed for Chinese History study. By citing data from academic GIS dataset like CHGIS, HisGeoMap provides accurate indexing of ancient cities and provinces. Unlike traditional static map, by providing functionalities like place name search, smart time indexing and easy zoom-in-out experience, HisGeoMap satisfies history researcher and amateur’s need of indexing the location of ancient places and simplifies the process to provide user great experience.",
+                    hisGeoMap
+                ),
+
                 new Feed(
                     "Adaptive Binning & Grouping of Data",
                     "This project investigates the use of novel and intuitive interaction techniques to support adaptive binning and grouping of data at the GUI level. Currently, exploratory data analysis tools only support indirect manipulation of binning and grouping through interaction with various menus and sub-menus. We are investigating embedded interactions that enable a user to directly manipulate this critriea through interaction with graphical elements of a visualization.",
                     emsImage
                 ),
+
+                new Feed("Ufit", "", ufitImage),
+
                 new Feed(
                     "SciQ",
                     "SciQ is a mobile app that wants to revolutionize the way we think about skin care. By combining scientific data with crowdsourcing and social media, SciQ aims to create transparency about the chemical compositions of different products and how those chemicals react with diverse skin types. Users of SciQ can see other users' reviews on any skin care product or create their own reviews. By its strong search functionality, users can easily search the product they want.",
@@ -82,9 +92,9 @@ export default class Projects extends PureComponent {
 
     render() {
         return (
-            <ul class="feedList" style={styles.root}>
+            <ul className="feedList" style={styles.root}>
                 {this.state.feedList.map((e, i) => (
-                    <li key="i" style={styles.element}>
+                    <li key={i} style={styles.element}>
                         <div style={styles.feed}>
                             <img src={e.image} style={styles.feedImage} />
                             <div style={styles.feedDescription}>

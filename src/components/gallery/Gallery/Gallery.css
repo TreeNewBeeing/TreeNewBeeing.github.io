@@ -1,3 +1,7 @@
+.gallery {
+    will-change: filter;
+}
+
 .gallery-image {
     position: absolute;
     border: 10px solid white;
@@ -6,5 +10,10 @@
     box-shadow: 0 0 10px;
     transition: transform 0.2s ease-in-out;
     backface-visibility: hidden;
+    overflow: hidden;
+    will-change: transform;
+}
+
+.galler-image-pointer {
     cursor: pointer;
 }

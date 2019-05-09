@@ -121,7 +121,6 @@ class Experience extends PureComponent {
     componentWillMount() {}
 
     render() {
-        console.log(months);
         return (
             <div style={styles.experience}>
                 <div style={styles.months}>

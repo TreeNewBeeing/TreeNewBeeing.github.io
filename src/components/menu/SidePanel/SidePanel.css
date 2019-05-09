@@ -6,6 +6,7 @@
     background-color: white;
     overflow-x: hidden;
     overflow-y: scroll;
+    -webkit-overflow-scrolling: touch;
 }
 
 .side-panel-appear {

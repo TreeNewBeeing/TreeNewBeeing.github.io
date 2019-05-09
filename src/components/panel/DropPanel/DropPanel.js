@@ -1,6 +1,7 @@
 import React from "react";
 import "./DropPanel.css";
 import Draggable from "react-draggable";
+import { DragHandler } from "../../../lib/DragHandler";
 
 function easeInOutQuad(t, b, c, d) {
     t /= d / 2;
@@ -30,7 +31,7 @@ export default class DropPanel extends React.Component {
     }
 
     drop = e => {
-        const direction = e.screenY - this.y;
+        const direction = this.dragInfo.calculateInitialDiff(e);
         this.animatePanel(direction);
     };
 
@@ -70,17 +71,21 @@ export default class DropPanel extends React.Component {
         requestAnimationFrame(animation);
         if (direction > 0) {
             this.props.onExpand();
-        } else if (direction < 0) {
+        } else {
             this.props.onClose();
         }
     };
 
     startDrag = e => {
-        this.y = e.screenY;
+        const event = e.nativeEvent;
+        this.dragInfo = new DragHandler(event);
     };
 
     drag = e => {
-        const displacement = e.movementY / this.props.height;
+        e.preventDefault();
+        e.stopPropagation();
+        const displacement = this.dragInfo.calculateDiff(e) / this.props.height;
+
         let progress = this.state.offset + displacement;
         progress =
             progress > this.state.RATIO_OF_MAX
@@ -106,12 +111,20 @@ export default class DropPanel extends React.Component {
         return state;
     }
 
-    getSnapshotBeforeUpdate(prevProps) {
+    componentDidUpdate(prevProps) {
         if (prevProps.expand != this.props.expand) {
             this.animatePanel(this.props.expand ? 1 : -1);
         }
-        return null;
     }
+
+    touch = () => {
+        const direction =
+            this.state.offset >
+            (this.state.RATIO_OF_MAX + this.state.RATIO_OF_WHITE) / 2
+                ? 1
+                : -1;
+        this.animatePanel(direction);
+    };
 
     render() {
         return (
@@ -133,9 +146,9 @@ export default class DropPanel extends React.Component {
                         width: this.props.width,
                         height: this.props.height,
                         backgroundColor: `rgba(
-                                ${this.state.offset * 238},
-                                ${this.state.offset * 238},
-                                ${this.state.offset * 238},
+                                ${parseInt(this.state.offset * 238)},
+                                ${parseInt(this.state.offset * 238)},
+                                ${parseInt(this.state.offset * 238)},
                                 ${(this.state.RATIO_OF_MAX -
                                     this.state.offset) *
                                     0.2 +
@@ -146,7 +159,10 @@ export default class DropPanel extends React.Component {
                             this.props.corner[0]
                     }}
                 >
-                    <strong className="drop-panel-leavers">
+                    <strong
+                        className="drop-panel-leavers"
+                        // onTouchStart={this.touch}
+                    >
                         <div className="drop-panel-leaver" />
                         <div className="drop-panel-leaver" />
                     </strong>
