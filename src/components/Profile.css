@@ -1,0 +1,98 @@
+#home {
+    height: fit-content;
+    display: flex;
+    padding-top: 100px;
+    justify-content: center;
+    flex-direction: column;
+    background: rgba(0, 0, 0, 0.8);
+}
+
+.Profile-icon {
+    /* margin-top: 100px; */
+    width: 120px !important;
+    height: 120px !important;
+    margin: 20px auto;
+}
+
+.Profile-name {
+    line-height: 80px;
+    padding-top: 10px;
+
+    margin: 0 auto;
+    font-weight: normal;
+    font-size: 20px;
+    color: white;
+}
+
+.Profile-desc {
+    line-height: 25px;
+    margin: 0 auto;
+    text-align: center;
+    color: white;
+    font-size: 14px;
+    font-weight: 400;
+}
+
+.Profile-tags {
+    margin: 0 auto;
+    margin-top: 10px;
+    width: 100%;
+    max-width: 400px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.Profile-tags > * {
+    margin: 5px;
+}
+.page {
+    background: rgba(0, 0, 0, 0.8);
+}
+
+.Profile-lang {
+    margin-left: 20px !important;
+}
+
+.Profile-lang-select {
+    box-sizing: border-box;
+    text-align: center;
+    min-width: 100px !important;
+}
+
+.Profile-toolbar {
+    justify-content: space-between;
+}
+
+.Profile-toolbar-left {
+    display: flex;
+}
+
+.Profile-collapse {
+    width: 100vw;
+    height: 100vh;
+    position: fixed;
+    left: 0;
+    top: 0;
+    z-index: 2000;
+    opacity: 0.5;
+    background: #000;
+}
+
+.Profile-collapse-appear {
+    pointer-events: all;
+    background: #000;
+}
+
+.Profile-collapse-disappear {
+    pointer-events: none;
+    background: transparent;
+}
+
+.Profile-collapse-appear:hover {
+    cursor: pointer;
+}
+
+.MuiDrawer-paper {
+    z-index: 2500 !important;
+}

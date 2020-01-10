@@ -9,6 +9,7 @@ import NavbarImp from "./components/implementation/NavbarImp/NavbarImp";
 import SidePanelImp from "./components/implementation/SidePanelImp/SidePanelImp";
 
 import Profile from "./components/Profile";
+window.sessionStorage.setItem("lang", "CN");
 class App extends Component {
     constructor(props) {
         super(props);
@@ -27,16 +28,7 @@ class App extends Component {
         return (
             <Router>
                 <Route path="/">
-                    <SideNavigation
-                        pageMove={true}
-                        mask={true}
-                        expand={this.state.expand}
-                        navbar={<NavbarImp />}
-                        sidePanel={<SidePanelImp close={this.hideSidePanel} />}
-                    >
-                        <Profile />
-                        {/* <Route path="/" component={Profile} /> */}
-                    </SideNavigation>
+                    <Profile />
                 </Route>
             </Router>
         );
