@@ -2,10 +2,12 @@
     "name": "personal",
     "version": "0.1.0",
     "private": true,
+    "homepage": "https://TreeNewBeeing.github.io/personal/",
     "dependencies": {
         "@material-ui/core": "^4.8.3",
         "@material-ui/icons": "^4.5.1",
         "d3": "^5.1.0",
+        "gh-pages": "^2.2.0",
         "react": "^16.1.1",
         "react-dom": "^16.1.1",
         "react-draggable": "^3.3.0",
@@ -22,7 +24,8 @@
         "watch": "sass --watch src/scss/:src/css/",
         "build": "react-scripts build",
         "test": "mocha --require @babel/register src/test",
-        "eject": "react-scripts eject"
+        "eject": "react-scripts eject",
+        "deploy": "gh-pages -b master -d build"
     },
     "devDependencies": {
         "@babel/cli": "^7.4.4",
